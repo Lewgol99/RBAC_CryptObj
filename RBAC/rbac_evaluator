@@ -1,0 +1,45 @@
+from colorama import Fore
+import json
+from encryption_evaluator import EncryptionEvaluator
+
+class AccessSubject:
+    def extract_rbac_configuration(self, encryption):
+        self.encryption = EncryptionEvaluator()
+        
+        # Load Plaintext JSON Data Files
+        with open('roles.json', 'r') as roles_file:
+            self.roles_data = json.load(roles_file)
+        
+        with open('users.json', 'r') as users_file:
+            self.users_data = json.load(users_file)
+
+        with open('permissions.json', 'r') as permissions_file:
+            self.permissions_data = json.load(permissions_file)
+        
+        with open('priorities.json', 'r') as priorities_file:
+            self.priorities_data = json.load(priorities_file)
+        
+        print(Fore.LIGHTMAGENTA_EX + "All JSON files loaded Successfully!")
+        
+        # Load Ciphertext JSON Data Files (for runtime use)
+        try:
+            roles_json = json.dumps(self.roles_data)
+            self.encrypted_roles = self.encryption.encrypt_data(roles_json)
+            print(Fore.BLUE + f"Data Encrypted Successfully: {len(self.encrypted_roles)} bytes (roles.json)")
+            
+            users_json = json.dumps(self.users_data)
+            self.encrypted_users = self.encryption.encrypt_data(users_json)
+            print(Fore.BLUE + f"Data Encrypted Successfully: {len(self.encrypted_users)} bytes (users.json)")
+            
+            permissions_json = json.dumps(self.permissions_data)
+            self.encrypted_permissions = self.encryption.encrypt_data(permissions_json)
+            print(Fore.BLUE + f"Data Encrypted Successfully: {len(self.encrypted_permissions)} bytes (permissions.json)")
+            
+            priorities_json = json.dumps(self.priorities_data)
+            self.encrypted_priorities = self.encryption.encrypt_data(priorities_json)
+            print(Fore.BLUE + f"Data Encrypted Successfully: {len(self.encrypted_priorities)} bytes (priorities.json)")
+
+        except Exception as e:
+            print(Fore.RED + f"Encryption warning: {e}")
+        
+        return True
