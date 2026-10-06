@@ -14,6 +14,7 @@ from request import get_ca_status, submit_csr_to_ca, fetch_all_certificates
 from encryptor import AsymmetricEncryptor
 from digital_signature import DigitalSignature
 from latency_monitor import LatencyMonitor  # unmodified — only imported, not edited
+from rbac_evaluator import AccessSubject
 
 if __name__ == '__main__':
 
@@ -49,6 +50,11 @@ if __name__ == '__main__':
 
     with open('ciphers.json', 'r') as file:
         ciphers = json.load(file)
+
+    rbac = AccessSubject()
+    rbac.extract_rbac_configuration()
+    roles = {r: b['permissions'] for r, b in rbac.roles_data.items()}   # role -> permissions
+    users = {u['name']: u['roles'] for u in rbac.users_data['users']}   # user -> roles
 
     if len(sys.argv) < 5:
         print(Fore.YELLOW + f'Usage: {sys.argv[0]} node_name, asymmetric_cipher, key_size/curve, symmetric_cipher')
@@ -106,6 +112,8 @@ if __name__ == '__main__':
             conf.onStateChanged = onStateChanged
             super(Raft, self).__init__(selfNodeAddr, otherNodeAddrs, conf)
             self.__counter = 0
+            self.roles = roles
+            self.users = users
             self.nodes_data = nodes_data
             self._last_leader = None
 
@@ -115,13 +123,18 @@ if __name__ == '__main__':
             self.__counter += 1
 
         @replicated
-        def addValue(self, value, cn):
-            _set_enc_ctx(f"addValue({value}) → replicate")
-            self.__counter += value
+        def addValue(self, user, value, cn):
+            _set_enc_ctx(f"addValue({user}, {value}) → replicate")
+            # RBAC: does any of this user's roles grant 'increment'?
+            allowed = any('increment' in self.roles.get(r, []) for r in self.users.get(user, []))
+            before = self.__counter
+            if allowed:
+                self.__counter += value
+            verdict = f"{Fore.GREEN}ALLOWED" if allowed else f"{Fore.RED}DENIED"
             print(
                 f"\n  {'─'*54}\n"
                 f"RAFT LOG ENTRY  [{node_name}]  seq={cn}\n"
-                f"addValue({value})  |  counter: {self.__counter - value} → "
+                f"{user}: addValue({value}) {verdict}{Style.RESET_ALL}  |  counter: {before} → "
                 f"{Fore.GREEN}{self.__counter}{Style.RESET_ALL}\n"
                 f"  {'─'*54}"
             )
@@ -155,6 +168,9 @@ if __name__ == '__main__':
     if node_name not in nodes:
         print(Fore.RED + f'Error: Node {node_name} not found in nodes.json')
         sys.exit(-1)
+
+    rbac_user = list(users)[list(nodes).index(node_name) % len(users)]
+    print(Fore.YELLOW + f'  RBAC  : {node_name} acts as {rbac_user} {users[rbac_user]}\n')
 
     self_node = nodes[node_name]
     self_addr = f"{self_node['addr']}:{self_node['port']}"
@@ -307,8 +323,8 @@ if __name__ == '__main__':
             done.set()
 
         start = time.perf_counter()
-        _set_enc_ctx(f"addValue(10) seq={seq} → send")
-        o.addValue(10, seq, callback=callback)
+        _set_enc_ctx(f"addValue({rbac_user}, 10) seq={seq} → send")
+        o.addValue(rbac_user, 10, seq, callback=callback)
 
         if not done.wait(timeout=10):
             print(Fore.RED + f'  seq={seq} timed out — recording as censored sample')
