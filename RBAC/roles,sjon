@@ -1,0 +1,23 @@
+{
+  "admin": {
+    "permissions": ["increment", "read", "write"]
+  },
+  "Senior Lecturer": {
+    "permissions": ["increment", "read"]
+  },
+  "Principal Lecturer": {
+    "permissions": ["increment", "read"]
+  },
+  "Principal Engineer": {
+    "permissions": ["increment", "read"]
+  },
+  "Senior Engineer": {
+    "permissions": ["increment", "read"]
+  },
+  "Engineer": {
+    "permissions": ["increment", "read"]
+  },
+  "Lecturer": {
+    "permissions": ["increment", "read"]
+  }
+}
