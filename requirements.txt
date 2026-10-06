@@ -1,0 +1,13 @@
+web3==6.0.0
+eth-account<0.9
+lxml
+pysyncobj
+watchdog
+requests
+dill
+psutil
+colorama
+pandas
+cryptography
+flask
+gunicorn

@@ -1,0 +1,53 @@
+Protocol: CryptObj_Phase1_v2 AnBx
+ 
+Types:
+  Agent C1,C2,C3,C4;
+  Certified C1,C2,C3,C4;
+  Number Term, Last_log_index, Last_log_term;
+  Bool trueV, falseV;
+  Number request_vote, response_vote;
+  Function [Agent -> PublicKey] pk;
+  Function [Agent -> PublicKey] sk;
+  String tag1,tag3,tag5;
+ 
+Knowledge:
+  C1: C1,C2,C3,C4, pk, sk, inv(sk(C1)), inv(pk(C1)), trueV, falseV, request_vote, response_vote, tag1,tag3,tag5;
+  C2: C1,C2,C3,C4, pk, sk, inv(sk(C2)), inv(pk(C2)), trueV, falseV, request_vote, response_vote, tag1,tag3,tag5;
+  C3: C1,C2,C3,C4, pk, sk, inv(sk(C3)), inv(pk(C3)), trueV, falseV, request_vote, response_vote, tag1,tag3,tag5;
+  C4: C1,C2,C3,C4, pk, sk, inv(sk(C4)), inv(pk(C4)), trueV, falseV, request_vote, response_vote, tag1,tag3,tag5
+ 
+Actions:
+ 
+# ----------------------------------------------------------------
+# Phase 1 - Election: C2 candidate, C1, C3 and C4 voters
+# ----------------------------------------------------------------
+ 
+# as166h-node002-C2 | [PAYLOAD] pre-sign structure: identity=(C2,C1,C3) || data={'type': 'request_vote', 'term': 1, 'last_log_index': 1, 'last_log_term': 0}
+C2 -> C1: {{C2,C1,C3,C4, tag1, request_vote, Term, Last_log_index, Last_log_term}inv(sk(C2))}pk(C1)
+ 
+# as166h-node001-C1 | [PAYLOAD] pre-sign structure: identity=(C1,C2,C3) || data={'type': 'response_vote', 'term': 1}
+C1 -> C2: {{C1,C2,C3,C4, tag1, response_vote, Term}inv(sk(C1))}pk(C2)
+ 
+# as166h-node002-C3 | [PAYLOAD] pre-sign structure: identity=(C2,C2,C1) || data={'type': 'request_vote', 'term': 1, 'last_log_index': 1, 'last_log_term': 0}
+C2 -> C3: {{C2,C3,C1,C4, tag3, request_vote, Term, Last_log_index, Last_log_term}inv(sk(C2))}pk(C3)
+ 
+# as166h-node001-C3 | [PAYLOAD] pre-sign structure: identity=(C3,C2,C1) || data={'type': 'response_vote', 'term': 1}
+C3 -> C2: {{C3,C2,C1,C4, tag3, response_vote, Term}inv(sk(C3))}pk(C2)
+ 
+# node002 -> node004 | identity=(C2,C4,C1,C3)
+C2 -> C4: {{C2,C4,C1,C3, tag5, request_vote, Term, Last_log_index, Last_log_term}inv(sk(C2))}pk(C4)
+ 
+# node004 -> node002 | identity=(C4,C2,C1,C3)
+C4 -> C2: {{C4,C2,C1,C3, tag5, response_vote, Term}inv(sk(C4))}pk(C2)
+ 
+Goals:
+ 
+# ---- Authentication ----
+C1 weakly authenticates C2 on Term, Last_log_index, Last_log_term
+C3 weakly authenticates C2 on Term, Last_log_index, Last_log_term
+C4 weakly authenticates C2 on Term, Last_log_index, Last_log_term
+ 
+# ---- Secrecy ----
+Term secret between C1, C2, C3, C4
+Last_log_index secret between C1, C2, C3, C4
+Last_log_term secret between C1, C2, C3, C4
