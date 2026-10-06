@@ -14,8 +14,5 @@ class AccessSubject:
         with open('permissions.json', 'r') as permissions_file:
             self.permissions_data = json.load(permissions_file)
         
-        with open('priorities.json', 'r') as priorities_file:
-            self.priorities_data = json.load(priorities_file)
-        
         print(Fore.LIGHTMAGENTA_EX + "All JSON files loaded Successfully!")
         return True
