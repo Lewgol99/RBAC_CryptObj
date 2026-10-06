@@ -1,0 +1,60 @@
+{
+  "wallets": {
+    "Lewis": {
+      "address": "0xA0Fcc5F09B4D221AB1C69F1798BD1F5E5F167139",
+      "balance": 1000.0,
+      "role": "admin",
+      "transactions": []
+    },
+    "Paolo": {
+      "address": "0xA0Fcc5F09B4D221AB1C69F1798BD1F5E5F167139",
+      "balance": 1000.0,
+      "role": "Senior Lecturer",
+      "transactions": []
+    },
+    "Victor": {
+      "address": "0xA0Fcc5F09B4D221AB1C69F1798BD1F5E5F167139",
+      "balance": 1000.0,
+      "role": "Professor",
+      "transactions": []
+    },
+    "Alice": {
+      "address": "0xA0Fcc5F09B4D221AB1C69F1798BD1F5E5F167139",
+      "balance": 1000.0,
+      "role": "Principal Engineer",
+      "transactions": []
+    },
+    "Bob": {
+      "address": "0xA0Fcc5F09B4D221AB1C69F1798BD1F5E5F167139",
+      "balance": 1000.0,
+      "role": "Senior Engineer",
+      "transactions": []
+    },
+    "Charlie": {
+      "address": "0xA0Fcc5F09B4D221AB1C69F1798BD1F5E5F167139",
+      "balance": 1000.0,
+      "role": "Engineer",
+      "transactions": []
+    },
+    "Karl": {
+      "address": "0xA0Fcc5F09B4D221AB1C69F1798BD1F5E5F167139",
+      "balance": 1000.0,
+      "role": "Lecturer",
+      "transactions": []
+    }
+  },
+  "network": {
+    "chain_id": 11155111,
+    "name": "sepolia",
+    "currency": "ETH"
+  },
+  "contract": {
+    "address": "0x65f578ff263F152d9f4a7576d1aB07fE6ce7F594",
+    "from_address": "0xA0Fcc5F09B4D221AB1C69F1798BD1F5E5F167139",
+    "private_key": "0xc93a52e19463e435af6860dfe310ae25c2d1337db1f80aee2c371c33363e4416",
+    "name": "TX-PBAC Token",
+    "symbol": "TPT",
+    "decimals": 18,
+    "total_supply": 7000.0
+  }
+}
