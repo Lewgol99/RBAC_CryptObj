@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "name": "Lewis",
+      "roles": ["admin"]
+    },
+    {
+      "name": "Paolo",
+      "roles": ["Senior Lecturer"]
+    },
+    {
+      "name": "Victor",
+      "roles": ["Principal Lecturer"]
+    },
+    {
+      "name": "Alice",
+      "roles": ["Principal Engineer"]
+    },
+    {
+      "name": "Bob",
+      "roles": ["Senior Engineer"]
+    },
+    {
+      "name": "Charlie",
+      "roles": ["Engineer"]
+    },
+    {
+      "name": "Karl",
+      "roles": ["Lecturer"]
+    }
+  ]
+}
